@@ -1,0 +1,45 @@
+version: '2'
+services:
+  prometheus:
+    image: prom/prometheus:v2.29.2
+    container_name: prometheus
+    hostname: prometheus
+    restart: always
+    user: root
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - prometheus:/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - snmp-exporter
+  snmp-exporter:
+    image: prom/snmp-exporter:v0.20.0
+    container_name: snmp-exporter
+    restart: always
+    user: root
+    environment:
+      TZ: Asia/Bangkok
+    volumes:
+      - /etc/localtime:/etc/localtime
+      #- ./data/snmp_conf:/etc/snmp_exporter
+    ports:
+    - 9116:9116
+    #- 116:116/udp
+
+  grafana:
+    image: grafana/grafana:latest
+    user: root
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+
+networks:
+  default:
+    external:
+      name: mired
+
+volumes:
+  prometheus:
