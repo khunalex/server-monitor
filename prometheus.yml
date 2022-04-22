@@ -9,6 +9,8 @@ scrape_configs:
     static_configs:
       - targets:
         - 192.168.5.100
+        - pi4.itcombox.com
+        - wopr.itcombox.com
     metrics_path: /snmp
     params:
       module: [if_mib]
